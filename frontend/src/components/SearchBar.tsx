@@ -1,42 +1,83 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import DataTable from "react-data-table-component";
 import { FaSearch } from "react-icons/fa";
+import { BsFillTrashFill,BsFillPencilFill } from "react-icons/bs";
 
 import "./SearchBar.css";
 
-export const SearchBar = () => {
-    const [input, setInput] = useState("");
+interface City {
+  cityname: string;
+  citycount: number;
+}
 
-    const fetchData = (value: any) => {
-      fetch("http://localhost:5003/api/cities")
-        .then((response) => response.json())
-        .then((json) => {
-          const results = json.filter((city: any) => {
-            return (
-              value &&
-              city &&
-              city.cityname &&
-              city.cityname.toLowerCase().includes(value)
-            );
-          });
-          console.log(results);
-        });
-    };
-  
-    const handleChange = (value: any) => {
-      setInput(value);
-      fetchData(value);
-    };
-  
+interface SearchBarProps {
+  setResults: React.Dispatch<React.SetStateAction<City[]>>;
+}
 
- 
+const SearchBar = () => {
+  const [input, setInput] = useState<string>("");
+  const [data, setData] = useState<City[]>([]);
+
+  const columns = [
+    {
+      name: 'City',
+      selector: (row: City) => row.cityname,
+    },
+    {
+      name: 'Count',
+      selector: (row: City) => row.citycount,
+    },
+    {
+    name: "Action",
+    cell: (row: City) => (
+      <div className="actions">
+        <BsFillTrashFill className="delete-btn"/> {/* You can replace this with the actual action */}
+        <BsFillPencilFill /> {/* You can replace this with the actual action */}
+      </div>
+    ),
+    },
+  ];
+
+  useEffect(() => {
+    fetchData(input);
+  }, [input]);
+
+  const fetchData = (value: string) => {
+    fetch("http://localhost:5003/api/cities")
+      .then((response) => response.json())
+      .then((json: City[]) => {
+        const results = json.filter((city) =>
+          city.cityname.toLowerCase().includes(value.toLowerCase())
+        );
+        console.log(results);
+        setData(results);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  const handleChange = (value: string) => {
+    setInput(value);
+  };
+
   return (
-    <div className="input-wrapper">
-      <FaSearch id="search-icon" />
+    <div >
+        <div className="input-wrapper">
+        <FaSearch id="search-icon" />
       <input
         placeholder="Type to search..."
         value={input}
         onChange={(e) => handleChange(e.target.value)}
       />
+        </div>
+      
+
+      <div className="results-list">
+        <DataTable columns={columns} data={data} pagination />
+      </div>
     </div>
   );
 };
+
+export default SearchBar;
