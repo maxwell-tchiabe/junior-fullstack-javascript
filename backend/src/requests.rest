@@ -16,3 +16,17 @@ Content-Type: application/json
 GET http://localhost:5003/api/cities/3b8e4fa5-27eb-4a45-b6f7-b94f30a10c4a
 Content-Type: application/json
 
+
+###
+DELETE  http://localhost:5003/api/cities/3b8e4fa5-27eb-4a45-b6f7-b94f30a10c4a
+Content-Type: application/json
+
+###
+PUT  http://localhost:5003/api/cities/52f866f1-470f-4cfa-a6ec-95ee3b648fdb
+Content-Type: application/json
+
+
+{
+      "cityName": "Marburg",
+      "cityCount": 4333
+}

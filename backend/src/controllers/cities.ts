@@ -49,10 +49,10 @@ async function all_cities_controller(req: express.Request, res: express.Response
     try {
       const id = req.params.id;
       const query = 'SELECT citiesTable.cityId,citiesTable.cityName, citiesTable.cityCount FROM public.citiesTable where citiesTable.cityId = $1'
-      const is_appointment = await pool.query(query,[id]);
+      const is_city = await pool.query(query,[id]);
       const delete_query = 'DELETE   FROM public.citiesTable WHERE citiesTable.cityId = $1'
 
-      if(is_appointment.rows.length === 0){
+      if(is_city.rows.length === 0){
         console.log('city does not exist');
         return res.status(401).json({message:'city does not exist'})
     }
@@ -64,4 +64,28 @@ async function all_cities_controller(req: express.Request, res: express.Response
     }
   }
 
-  export {all_cities_controller,city_by_id_controller,create_city_controller,delete_city_controller}
+  
+  // Controller funcktion to update a city's information  in the database 
+  async function update_city_controller(req: express.Request, res: express.Response) {
+    try {
+        
+      const id = req.params.id;
+      const {cityName,cityCount} = req.body;
+      const query = 'SELECT citiesTable.cityId,citiesTable.cityName, citiesTable.cityCount FROM public.citiesTable where citiesTable.cityId = $1'
+      const is_city = await pool.query(query,[id]);
+      const update_query = 'UPDATE citiesTable SET cityName = $1,cityCount = $2 WHERE citiesTable.cityId = $3'
+
+      if(is_city.rows.length === 0){
+        console.log('city does not exist');
+        return res.status(401).json({message:'city does not exist'})
+    }
+
+      const result = await pool.query(update_query,[cityName,cityCount,id]);
+      return res.status(200).json({message: 'update successfully'});
+    } catch (error) {
+      console.log('Error during execution:', error.message );
+      res.status(500).json({message: 'Server error'});
+    }
+  }
+
+  export {all_cities_controller,city_by_id_controller,create_city_controller,delete_city_controller,update_city_controller}
