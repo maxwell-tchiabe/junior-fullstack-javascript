@@ -6,8 +6,8 @@ let local_pool_config = {
   user: 'postgres',
   password: 'pumaloma//1009',
   host: 'localhost',
-  port: '5432',
+  port: 5432,
   database: 'FirstData'
 };
 const pool = new Pool(local_pool_config);
-export default pool;
+export {pool};
