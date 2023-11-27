@@ -17,6 +17,7 @@ app.use(function(req, res, next) {
   });
 
   app.use('/api/cities', citiessRouter);
+  app.use('/api/cities', citiessRouter);
 
   app.listen(PORT, ()=> {
     console.log(`Server is listening on port:${PORT}`);
