@@ -11,27 +11,49 @@ interface City {
     cityid?: unknown
   }
  const Edit= () => {
-    const {id} = useParams();
-    const [city, setCity]= useState<City[]>([])
+    const [values, setValues]= useState({
+        cityName: '',
+        cityCount: ''
+      })
+      const {id} = useParams();
+    
     useEffect(() => {
         axios.get(`http://localhost:5003/api/cities/${id}`)
           .then(res => {
             console.log(res.data[0]);
-            setCity(res.data);
+            setValues({...values, cityName:res.data[0].cityname, cityCount: res.data[0].citycount});
           })
           .catch(err => console.log(err));
       }, [id]);
+      const navigate = useNavigate();
+      const handleEdit = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        axios.put(`http://localhost:5003/api/cities/${id}`, values)
+        .then(res => {
+          console.log(res)
+          navigate('/')
+        })
+        .catch(err => console.log(err))
+      }
      
   return (
     <div className="results-list">
-       <div className="Edit">
-            <div className="p-2">
-                <h2>City Detail</h2>
-                <h2>City:{city[0].cityname}</h2>
-                <h2>Count:{city[0].citycount}</h2>
-            </div>
-            <Link to="/" className="btn-btn">Back</Link>
-       </div>
+      <form onSubmit={handleEdit}>
+          <h2> Update city</h2>
+          <div>
+          <label htmlFor="">city</label>
+          <input type="text" placeholder="enter city"  value={values.cityName}
+          onChange={e => setValues({...values, cityName: e.target.value})}/>
+          </div>
+
+          <div>
+          <label htmlFor="">count</label>
+          <input type="text" placeholder="enter count"  value={values.cityCount}
+          onChange={e => setValues({...values, cityCount: e.target.value})}/>
+          </div>
+          
+          <button className="button">submit</button>
+        </form>
     </div>
   );
 };
