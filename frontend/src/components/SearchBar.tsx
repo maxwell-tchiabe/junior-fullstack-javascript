@@ -4,6 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { BsFillTrashFill,BsFillPencilFill,BsFillFileFill } from "react-icons/bs";
 import { MdRemoveRedEye } from "react-icons/md";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import "./SearchBar.css";
 
@@ -16,6 +17,15 @@ interface City {
 const SearchBar = () => {
   const [input, setInput] = useState<string>("");
   const [data, setData] = useState<City[]>([]);
+
+  const handleDelete = (id: any) => {
+    axios.delete(`http://localhost:5003/api/cities/${id}`)
+    .then(res => {
+      location.reload();
+      
+    })
+    .catch(err => console.log(err))
+  }
 
   const columns = [
     {
@@ -33,12 +43,12 @@ const SearchBar = () => {
           <Link to={`/read/${row.cityid}`}>
              <MdRemoveRedEye className="view-btn" />
           </Link>
-          <Link to={`/read/${row.cityid}`}>
-             <BsFillTrashFill className="delete-btn" />
-          </Link>
           <Link to={`/edit/${row.cityid}`}>
              <BsFillPencilFill className="view-btn" />
           </Link>
+          <button onClick={() => handleDelete(row.cityid)} >
+             <BsFillTrashFill   />
+          </button>
       </div>
     ),
     },
@@ -84,7 +94,8 @@ const SearchBar = () => {
       </div>
 
       <div>
-        <Link to="/create" className="delete-btn">Create</Link>
+        <Link to="/create" className="delete-btn">
+          <button className="button">create</button></Link>
       </div>
     </div>
   );
