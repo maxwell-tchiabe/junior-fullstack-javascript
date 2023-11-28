@@ -80,7 +80,7 @@ const SearchBar = () => {
   return (
     <div >
         <div className="input-wrapper">
-        <FaSearch id="search-icon" />
+        
       <input
         placeholder="Type to search..."
         value={input}
