@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { FaSearch } from "react-icons/fa";
-import { BsFillTrashFill,BsFillPencilFill } from "react-icons/bs";
+import { BsFillTrashFill,BsFillPencilFill,BsFillFileFill } from "react-icons/bs";
+import { MdRemoveRedEye } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 import "./SearchBar.css";
 
 interface City {
   cityname: string;
   citycount: number;
-}
-
-interface SearchBarProps {
-  setResults: React.Dispatch<React.SetStateAction<City[]>>;
+  cityid: unknown
 }
 
 const SearchBar = () => {
@@ -31,8 +30,15 @@ const SearchBar = () => {
     name: "Action",
     cell: (row: City) => (
       <div className="actions">
-        <BsFillTrashFill className="delete-btn"/> {/* You can replace this with the actual action */}
-        <BsFillPencilFill /> {/* You can replace this with the actual action */}
+          <Link to={`/read/${row.cityid}`}>
+             <MdRemoveRedEye className="view-btn" />
+          </Link>
+          <Link to={`/read/${row.cityid}`}>
+             <BsFillTrashFill className="delete-btn" />
+          </Link>
+          <Link to={`/edit/${row.cityid}`}>
+             <BsFillPencilFill className="view-btn" />
+          </Link>
       </div>
     ),
     },
@@ -75,6 +81,10 @@ const SearchBar = () => {
 
       <div className="results-list">
         <DataTable columns={columns} data={data} pagination />
+      </div>
+
+      <div>
+        <Link to="/create" className="delete-btn">Create</Link>
       </div>
     </div>
   );
